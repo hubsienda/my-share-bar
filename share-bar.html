@@ -80,11 +80,11 @@
 </style>
 
 <script>
-  // Get the URL to share: use 'ref' param if provided, fallback to current URL
+  // Get the shared URL from 'ref' param; fallback to current URL
   function getShareUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const ref = urlParams.get('ref');
-    return ref ? decodeURIComponent(ref) : window.location.href;
+    return ref ? decodeURIComponent(ref).trim() : window.location.href;
   }
 
   const shareUrl = getShareUrl();
@@ -114,14 +114,16 @@
   }
 
   function copyLink() {
+    // Use the passed-in shareUrl, not window.location
     navigator.clipboard.writeText(shareUrl)
       .then(() => alert('Link copied!'))
       .catch(err => {
         console.error('Copy failed:', err);
         // Fallback for older browsers
-        const el = document.createElement('input');
+        const el = document.createElement('textarea');
         el.value = shareUrl;
         document.body.appendChild(el);
+        el.focus();
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
