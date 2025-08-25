@@ -62,33 +62,52 @@
 </style>
 
 <script>
+  // Get the URL to share: use 'ref' param if provided, fallback to current URL
+  function getShareUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const ref = urlParams.get('ref');
+    return ref ? decodeURIComponent(ref) : window.location.href;
+  }
+
+  const shareUrl = getShareUrl();
+  const pageTitle = document.title;
+
   function shareOn(platform) {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent(document.title);
-    let shareUrl = '';
+    const encodedUrl = encodeURIComponent(shareUrl);
+    const encodedTitle = encodeURIComponent(pageTitle);
+    let url = '';
 
     switch (platform) {
       case 'twitter':
-        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+        url = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`;
         break;
       case 'facebook':
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
         break;
       case 'whatsapp':
-        // WhatsApp only works on mobile
-        shareUrl = `https://api.whatsapp.com/send?text=${title}%20${url}`;
+        url = `https://api.whatsapp.com/send?text=${encodedTitle}%20${encodedUrl}`;
         break;
       case 'email':
-        shareUrl = `mailto:?subject=${title}&body=Check out this page: ${url}`;
+        url = `mailto:?subject=${encodedTitle}&body=Check out this page: ${encodedUrl}`;
         break;
     }
 
-    if (shareUrl) window.open(shareUrl, '_blank', 'noopener');
+    if (url) window.open(url, '_blank', 'noopener');
   }
 
   function copyLink() {
-    navigator.clipboard.writeText(window.location.href)
+    navigator.clipboard.writeText(shareUrl)
       .then(() => alert('Link copied!'))
-      .catch(err => console.error('Copy failed', err));
+      .catch(err => {
+        console.error('Copy failed:', err);
+        // Fallback for older browsers
+        const el = document.createElement('input');
+        el.value = shareUrl;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+        alert('Link copied!');
+      });
   }
 </script>
