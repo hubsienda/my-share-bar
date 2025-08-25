@@ -22,31 +22,49 @@
 
 <style>
   .share-bar {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    justify-content: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.share-btn {
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.share-btn:hover {
+  transform: scale(1.1);
+  background: #f0f0f0;
+}
+
+/* On narrow screens, stack buttons into two rows */
+@media (max-width: 300px) {
+  .share-bar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
   }
   .share-btn {
-    background: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s, background 0.2s;
+    width: 36px;
+    height: 36px;
   }
-  .share-btn:hover {
-    transform: scale(1.1);
-    background: #f0f0f0;
-  }
+}
   .share-btn svg {
     pointer-events: none;
   }
